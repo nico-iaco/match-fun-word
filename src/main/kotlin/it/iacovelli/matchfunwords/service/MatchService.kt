@@ -20,13 +20,13 @@ class MatchService(val questionService: QuestionService,
      */
     fun createMatch(playerCreatorId: String): String {
         val match = Match(active = true, private = true)
-        match.id = randomStringUtils.getRandomString(6)
+        match._id = randomStringUtils.getRandomString(6)
         match.answers.addAll(answerService.getAllAnswer())
         match.questions.addAll(questionService.getAllQuestion())
         val playerDto = PlayerDto(playerCreatorId)
         match.addPlayer(playerDto)
         matchRepository.save(match)
-        return match.id
+        return match._id
     }
 
     /**
