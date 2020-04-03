@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Document
 class Match (var active: Boolean, val private: Boolean) {
 
     @Id
-    lateinit var _id: String
+    lateinit var id: String
 
-    val playerList: MutableSet<PlayerDto> = HashSet()
+    var playerList: MutableSet<PlayerDto> = HashSet()
 
-    val questions: MutableSet<Question> = HashSet()
+    var questions: MutableSet<Question> = HashSet()
 
-    val answers: MutableSet<Answer> = HashSet()
+    var answers: MutableSet<Answer> = HashSet()
 
     fun addPlayer(player: PlayerDto): Match {
         playerList.add(player)
@@ -27,13 +27,13 @@ class Match (var active: Boolean, val private: Boolean) {
 
         other as Match
 
-        if (_id != other._id) return false
+        if (id != other.id) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return _id.hashCode()
+        return id.hashCode()
     }
 
 
