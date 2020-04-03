@@ -20,13 +20,13 @@ class MatchService(private val questionService: QuestionService,
      */
     fun createMatch(playerCreatorId: String): String {
         val match = Match(active = true, private = true)
-        match._id = randomStringUtils.getRandomString(6)
+        match.id = randomStringUtils.getRandomString(6)
         match.answers.addAll(answerService.getAllAnswer())
         match.questions.addAll(questionService.getAllQuestion())
         val playerDto = PlayerDto(playerCreatorId)
         match.addPlayer(playerDto)
         matchRepository.save(match)
-        return match._id
+        return match.id
     }
 
     /**
@@ -41,6 +41,7 @@ class MatchService(private val questionService: QuestionService,
             val m = match.get()
             val playerDto = PlayerDto(playerId)
             m.addPlayer(playerDto)
+            matchRepository.save(m)
         }else {
             throw MatchNotFoundException("Nessuna partita trovata con quell'id")
         }
@@ -58,7 +59,9 @@ class MatchService(private val questionService: QuestionService,
         if (match.isPresent) {
             val m = match.get()
             val playerDto = PlayerDto(playerId)
-            return m.playerList.remove(playerDto)
+            val wasRemoved = m.playerList.remove(playerDto)
+            matchRepository.save(m)
+            return wasRemoved
         } else {
             throw MatchNotFoundException("Nessuna partita trovata con quell'id")
         }
