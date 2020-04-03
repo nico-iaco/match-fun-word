@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface QuestionRepository :MongoRepository<Question, ObjectId> {
+
+    fun findBySlot(slot: Int): List<Question>
+
 }

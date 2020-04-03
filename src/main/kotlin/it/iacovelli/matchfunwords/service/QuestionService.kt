@@ -19,4 +19,8 @@ class QuestionService(val repository: QuestionRepository) {
         return repository.findAll()
     }
 
+    fun getQuestionBySlot(slot: Int): List<Question> {
+        return repository.findBySlot(slot)
+    }
+
 }
