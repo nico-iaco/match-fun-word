@@ -8,7 +8,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/question")
-class QuestionController(val questionService: QuestionService) {
+class QuestionController(private val questionService: QuestionService) {
 
     @GetMapping("/")
     fun getAllQuestion(): ResponseEntity<List<Question>> {

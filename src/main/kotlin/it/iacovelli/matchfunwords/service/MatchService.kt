@@ -8,10 +8,10 @@ import it.iacovelli.matchfunwords.utils.RandomStringUtils
 import org.springframework.stereotype.Service
 
 @Service
-class MatchService(val questionService: QuestionService,
-                   val answerService: AnswerService,
-                   val randomStringUtils: RandomStringUtils,
-                   val matchRepository: MatchRepository) {
+class MatchService(private val questionService: QuestionService,
+                   private val answerService: AnswerService,
+                   private val randomStringUtils: RandomStringUtils,
+                   private val matchRepository: MatchRepository) {
 
     /**
      * This method creates a new playable match and add the creator to its player
