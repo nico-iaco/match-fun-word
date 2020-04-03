@@ -13,7 +13,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/user")
-class UserController(val userService: UserService) {
+class UserController(private val userService: UserService) {
 
     @PostMapping("/login")
     fun login(@Valid @RequestBody loginRequest: LoginRequest) : ResponseEntity<UserDto> {

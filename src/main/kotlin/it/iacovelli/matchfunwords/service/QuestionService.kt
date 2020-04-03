@@ -5,7 +5,7 @@ import it.iacovelli.matchfunwords.repository.QuestionRepository
 import org.springframework.stereotype.Service
 
 @Service
-class QuestionService(val repository: QuestionRepository) {
+class QuestionService(private val repository: QuestionRepository) {
 
     fun addQuestion(question: Question) {
         repository.save(question)

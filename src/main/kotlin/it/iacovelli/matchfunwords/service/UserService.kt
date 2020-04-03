@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class UserService(val userRepository: UserRepository,
-                  val passwordEncoder: PasswordEncoder,
-                  val userMapper: UserMapper,
-                  val authenticationManager: AuthenticationManager,
-                  val jwtUtils: JwtUtils) {
+class UserService(private val userRepository: UserRepository,
+                  private val passwordEncoder: PasswordEncoder,
+                  private val userMapper: UserMapper,
+                  private val authenticationManager: AuthenticationManager,
+                  private val jwtUtils: JwtUtils) {
 
     fun registerUser(user: User): Boolean {
         try {
