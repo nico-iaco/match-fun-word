@@ -10,4 +10,6 @@ interface UserRepository: MongoRepository<User, String> {
 
     fun findByUsername(username: String): Optional<User>
 
+    fun findByUsernameAndPassword(username: String, password: String): Optional<User>
+
 }

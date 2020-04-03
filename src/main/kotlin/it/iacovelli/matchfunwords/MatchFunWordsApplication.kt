@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource
 import org.springframework.context.annotation.PropertySources
 
 @SpringBootApplication
-@PropertySource("classpath:database.properties")
+@PropertySource("classpath:database.properties", "classpath:jwt.properties")
 class MatchFunWordsApplication
 
 fun main(args: Array<String>) {
