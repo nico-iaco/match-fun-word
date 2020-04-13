@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: match-fun-words-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: match-fun-words
+  template:
+    metadata:
+      labels:
+        app: match-fun-words
+    spec:
+      containers:
+      - name: match-fun-words
+        image: repo.treescale.com/nico_iaco/match-fun-words
+        imagePullPolicy: Never
+        ports:
+          - containerPort: 8080

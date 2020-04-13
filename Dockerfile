@@ -10,7 +10,7 @@ RUN addgroup -S user && adduser -S local -G user
 USER local:user
 
 # Copy the jar application into the container
-COPY build/libs/*.jar /app.js
+COPY build/libs/*.jar /app.jar
 
 # Specify the command to execute to run the spring boot application, and the healtcheck to check the status of the application
 ENTRYPOINT java -jar app.jar
