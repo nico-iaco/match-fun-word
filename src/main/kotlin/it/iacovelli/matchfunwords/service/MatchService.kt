@@ -1,7 +1,9 @@
 package it.iacovelli.matchfunwords.service
 
 import it.iacovelli.matchfunwords.exception.MatchNotFoundException
+import it.iacovelli.matchfunwords.model.Answer
 import it.iacovelli.matchfunwords.model.Match
+import it.iacovelli.matchfunwords.model.Question
 import it.iacovelli.matchfunwords.model.dto.PlayerDto
 import it.iacovelli.matchfunwords.repository.MatchRepository
 import it.iacovelli.matchfunwords.utils.RandomStringUtils
@@ -89,6 +91,46 @@ class MatchService(private val questionService: QuestionService,
         } else {
             throw MatchNotFoundException("Nessuna partita trovata con quell'id")
         }
+    }
+
+    /**
+     * This method get an answer card from the match in a synchronous way so that multiple user can't
+     * get the same card for the same match
+     * @param matchId the id of the match
+     * @throws MatchNotFoundException if the match wasn't found
+     * @return an answer from the answers available
+     */
+    @ExperimentalStdlibApi
+    @Synchronized
+    fun getAnswerCardFromMatch(matchId: String): Answer{
+        val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Nessun match trovato con l'id") }
+        val shuffled: MutableList<Answer> = match.answers.shuffled().toMutableList()
+        val answer = shuffled.removeFirst()
+
+        match.answers.remove(answer)
+        matchRepository.save(match)
+
+        return answer
+    }
+
+    /**
+     * This method get a question card from the match in a synchronous way so that multiple user can't
+     * get the same card for the same match
+     * @param matchId the id of the match
+     * @throws MatchNotFoundException if the match wasn't found
+     * @return a question from the questions available
+     */
+    @ExperimentalStdlibApi
+    @Synchronized
+    fun getQuestionCardFromMatch(matchId: String): Question{
+        val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Nessun match trovato con l'id") }
+        val shuffled: MutableList<Question> = match.questions.shuffled().toMutableList()
+        val question = shuffled.removeFirst()
+
+        match.questions.remove(question)
+        matchRepository.save(match)
+
+        return question
     }
 
 }
