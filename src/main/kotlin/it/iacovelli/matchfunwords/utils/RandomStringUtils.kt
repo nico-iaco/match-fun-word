@@ -9,7 +9,7 @@ class RandomStringUtils {
         val alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz"
         val sb: StringBuilder = StringBuilder(n)
         for (i in 0..n) {
-            val idx: Int = ((alphabet.length * Math.random()).toInt())
+            val idx: Int = (alphabet.length * Math.random().toInt())
             sb.append(alphabet[idx])
         }
         return sb.toString()

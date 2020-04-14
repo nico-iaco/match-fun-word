@@ -1,4 +1,5 @@
 ### Match Fun Words
+[![CodeFactor](https://www.codefactor.io/repository/github/nico-iaco/match-fun-word/badge)](https://www.codefactor.io/repository/github/nico-iaco/match-fun-word)
 
 #### Regole del gioco tradizionale
 All'inizio del gioco tutti i giocatori pescano 10 carte dal mazzo delle **_"risposte"_** e successivamente

@@ -6,5 +6,4 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface AnswerRepository: MongoRepository<Answer, ObjectId> {
-}
+interface AnswerRepository: MongoRepository<Answer, ObjectId>
