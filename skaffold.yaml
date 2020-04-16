@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: match-fun-words
+build:
+  artifacts:
+  - image: repo.treescale.com/nico_iaco/match-fun-words
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes/deployment.yaml
+    - kubernetes/service.yaml

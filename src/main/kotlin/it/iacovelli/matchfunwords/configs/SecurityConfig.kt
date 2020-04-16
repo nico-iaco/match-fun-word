@@ -50,6 +50,7 @@ class SecurityConfig(private val userDetailsService: MongoUserDetailService) : W
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/match-fun-words/**").permitAll()
                 .anyRequest().authenticated()
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
