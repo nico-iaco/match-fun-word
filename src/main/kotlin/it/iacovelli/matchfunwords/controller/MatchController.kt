@@ -1,6 +1,8 @@
 package it.iacovelli.matchfunwords.controller
 
+import it.iacovelli.matchfunwords.model.Answer
 import it.iacovelli.matchfunwords.model.Match
+import it.iacovelli.matchfunwords.model.Question
 import it.iacovelli.matchfunwords.service.MatchService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,6 +21,18 @@ class MatchController(private val matchService: MatchService) {
     @PostMapping("/{matchId}/join")
     fun partecipateToMatch(@PathVariable matchId: String, authentication: Authentication): ResponseEntity<Boolean> {
         return ResponseEntity.ok(matchService.partecipateToMatch(authentication.name, matchId))
+    }
+
+    @ExperimentalStdlibApi
+    @PostMapping("/{matchId}/card")
+    fun getInitialCardsFromMatch(@PathVariable matchId: String, authentication: Authentication): ResponseEntity<List<Answer>> {
+        return ResponseEntity.ok(matchService.getAnswerCardsFromMatch(matchId, 10))
+    }
+
+    @ExperimentalStdlibApi
+    @PostMapping("/{matchId}/judge")
+    fun getJudgeCardFromMatch(@PathVariable matchId: String, authentication: Authentication): ResponseEntity<Question> {
+        return ResponseEntity.ok(matchService.getQuestionCardFromMatch(matchId))
     }
 
     @PostMapping("/{matchId}/exit")

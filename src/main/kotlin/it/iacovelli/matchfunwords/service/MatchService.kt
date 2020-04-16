@@ -133,4 +133,15 @@ class MatchService(private val questionService: QuestionService,
         return question
     }
 
+    @ExperimentalStdlibApi
+    fun getAnswerCardsFromMatch(matchId: String, numberOfCards: Int): List<Answer> {
+        val answers = ArrayList<Answer>()
+
+        for (i in 1..numberOfCards) {
+            answers.add(getAnswerCardFromMatch(matchId))
+        }
+
+        return answers
+    }
+
 }
