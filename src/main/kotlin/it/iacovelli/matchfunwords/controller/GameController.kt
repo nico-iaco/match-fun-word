@@ -25,15 +25,15 @@ class GameController(val matchService: MatchService) {
     @SendTo("/game/judge/{matchId}")
     fun sendCardToJudge(@DestinationVariable matchId: String, @DestinationVariable playerId: String, @Payload card: CardDto): CardDto {
         simpMessagingTemplate.convertAndSend("/game/player/${matchId}/${playerId}", matchService.getAnswerCardFromMatch(matchId))
-        LOGGER.info("Match: {}, Player: {}, Card: {}", matchId, playerId, card)
+        LOGGER.debug("Match: {}, Player: {}, Card: {}", matchId, playerId, card)
         return card
     }
 
     @MessageMapping("/match/{matchId}/judge/choose")
     @SendTo("/game/player/{matchId}")
     fun chooseRoundWinner(@DestinationVariable matchId: String, @Payload card: CardDto): CardDto {
-        //TODO: Richiamare metodo per aggiornare il punteggio
-        LOGGER.info("Match: {}, Card: {}", matchId, card)
+        matchService.updateMatchPoints(matchId, card.playerId)
+        LOGGER.debug("Match: {}, Card: {}", matchId, card)
         return card
     }
 

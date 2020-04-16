@@ -7,6 +7,8 @@ import it.iacovelli.matchfunwords.model.Question
 import it.iacovelli.matchfunwords.model.dto.PlayerDto
 import it.iacovelli.matchfunwords.repository.MatchRepository
 import it.iacovelli.matchfunwords.utils.RandomStringUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,6 +16,8 @@ class MatchService(private val questionService: QuestionService,
                    private val answerService: AnswerService,
                    private val randomStringUtils: RandomStringUtils,
                    private val matchRepository: MatchRepository) {
+
+    private val LOGGER: Logger = LoggerFactory.getLogger(MatchService::class.java)
 
     /**
      * This method creates a new playable match and add the creator to its player
@@ -44,7 +48,7 @@ class MatchService(private val questionService: QuestionService,
             val playerDto = PlayerDto(playerId)
             m.addPlayer(playerDto)
             matchRepository.save(m)
-        }else {
+        } else {
             throw MatchNotFoundException("Nessuna partita trovata con quell'id")
         }
         return true
@@ -102,7 +106,7 @@ class MatchService(private val questionService: QuestionService,
      */
     @ExperimentalStdlibApi
     @Synchronized
-    fun getAnswerCardFromMatch(matchId: String): Answer{
+    fun getAnswerCardFromMatch(matchId: String): Answer {
         val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Nessun match trovato con l'id") }
         val shuffled: MutableList<Answer> = match.answers.shuffled().toMutableList()
         val answer = shuffled.removeFirst()
@@ -122,7 +126,7 @@ class MatchService(private val questionService: QuestionService,
      */
     @ExperimentalStdlibApi
     @Synchronized
-    fun getQuestionCardFromMatch(matchId: String): Question{
+    fun getQuestionCardFromMatch(matchId: String): Question {
         val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Nessun match trovato con l'id") }
         val shuffled: MutableList<Question> = match.questions.shuffled().toMutableList()
         val question = shuffled.removeFirst()
@@ -142,6 +146,23 @@ class MatchService(private val questionService: QuestionService,
         }
 
         return answers
+    }
+
+    /**
+     * This method update the match incrementing the points of the player who had won the last round
+     * @param matchId the id of the match
+     * @param playerId the username of the player who had won the last round
+     */
+    fun updateMatchPoints(matchId: String, playerId: String) {
+        LOGGER.debug("Updating match: {} for user: {}", matchId, playerId)
+        val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Match non trovato") }
+        match.playerList.forEach { playerDto: PlayerDto -> (
+            if (playerDto.playerId == playerId) {
+                playerDto.points = playerDto.points + 1
+                LOGGER.debug("Now {} has {} points", playerId, playerDto.points)
+            }
+        )}
+        matchRepository.save(match)
     }
 
 }
