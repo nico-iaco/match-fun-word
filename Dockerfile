@@ -13,5 +13,5 @@ USER local:user
 COPY build/libs/*.jar /app.jar
 
 # Specify the command to execute to run the spring boot application, and the healtcheck to check the status of the application
-ENTRYPOINT java -jar app.jar
-HEALTHCHECK --interval=5m --timeout=3s --start-period=30s CMD curl -f http://localhost:8080/ || exit 1
+CMD java -jar -Dserver.port=$PORT app.jar
+# HEALTHCHECK --interval=5m --timeout=3s --start-period=30s CMD curl -f http://localhost:8080/ || exit 1
