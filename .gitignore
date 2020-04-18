@@ -33,3 +33,4 @@ out/
 
 /src/main/resources/database.properties
 /src/main/resources/jwt.properties
+*.DS_Store
