@@ -30,7 +30,6 @@ class GameController(val matchService: MatchService) {
         } catch (e: EmptyListException) {
             LOGGER.debug(e.message)
         }
-        
         LOGGER.debug("Match: {}, Player: {}, Card: {}", matchId, playerId, card)
         return card
     }
