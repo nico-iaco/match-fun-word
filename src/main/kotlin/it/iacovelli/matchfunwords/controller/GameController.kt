@@ -1,5 +1,6 @@
 package it.iacovelli.matchfunwords.controller
 
+import it.iacovelli.matchfunwords.exception.EmptyListException
 import it.iacovelli.matchfunwords.model.dto.CardDto
 import it.iacovelli.matchfunwords.service.MatchService
 import org.slf4j.Logger
@@ -24,7 +25,12 @@ class GameController(val matchService: MatchService) {
     @MessageMapping("/match/{matchId}/player/{playerId}/card")
     @SendTo("/game/judge/{matchId}")
     fun sendCardToJudge(@DestinationVariable matchId: String, @DestinationVariable playerId: String, @Payload card: CardDto): CardDto {
-        simpMessagingTemplate.convertAndSend("/game/player/${matchId}/${playerId}", matchService.getAnswerCardFromMatch(matchId))
+        try {
+            simpMessagingTemplate.convertAndSend("/game/player/${matchId}/${playerId}", matchService.getAnswerCardFromMatch(matchId))
+        } catch (e: EmptyListException) {
+            LOGGER.debug(e.message)
+        }
+        
         LOGGER.debug("Match: {}, Player: {}, Card: {}", matchId, playerId, card)
         return card
     }

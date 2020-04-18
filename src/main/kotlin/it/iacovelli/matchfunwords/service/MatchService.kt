@@ -1,5 +1,6 @@
 package it.iacovelli.matchfunwords.service
 
+import it.iacovelli.matchfunwords.exception.EmptyListException
 import it.iacovelli.matchfunwords.exception.MatchNotFoundException
 import it.iacovelli.matchfunwords.model.Answer
 import it.iacovelli.matchfunwords.model.Match
@@ -106,15 +107,21 @@ class MatchService(private val questionService: QuestionService,
      */
     @ExperimentalStdlibApi
     @Synchronized
+    @Throws(EmptyListException::class)
     fun getAnswerCardFromMatch(matchId: String): Answer {
         val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Nessun match trovato con l'id") }
         val shuffled: MutableList<Answer> = match.answers.shuffled().toMutableList()
-        val answer = shuffled.removeFirst()
+        try {
+            val answer = shuffled.removeFirst()
 
-        match.answers.remove(answer)
-        matchRepository.save(match)
+            match.answers.remove(answer)
+            matchRepository.save(match)
 
-        return answer
+            return answer
+        } catch (e: NoSuchElementException) {
+            throw EmptyListException("Carte risposta finite");
+        }
+
     }
 
     /**
@@ -142,7 +149,13 @@ class MatchService(private val questionService: QuestionService,
         val answers = ArrayList<Answer>()
 
         for (i in 1..numberOfCards) {
-            answers.add(getAnswerCardFromMatch(matchId))
+            try {
+                answers.add(getAnswerCardFromMatch(matchId))
+            } catch (e: EmptyListException) {
+                LOGGER.debug(e.message)
+                break
+            }
+
         }
 
         return answers
@@ -156,12 +169,12 @@ class MatchService(private val questionService: QuestionService,
     fun updateMatchPoints(matchId: String, playerId: String) {
         LOGGER.debug("Updating match: {} for user: {}", matchId, playerId)
         val match = matchRepository.findById(matchId).orElseThrow { throw MatchNotFoundException("Match non trovato") }
-        match.playerList.forEach { playerDto: PlayerDto -> (
+        match.playerList.forEach { playerDto: PlayerDto ->
             if (playerDto.playerId == playerId) {
                 playerDto.points = playerDto.points + 1
                 LOGGER.debug("Now {} has {} points", playerId, playerDto.points)
             }
-        )}
+        }
         matchRepository.save(match)
     }
 
