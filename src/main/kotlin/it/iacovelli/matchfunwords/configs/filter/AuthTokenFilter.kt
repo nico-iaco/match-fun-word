@@ -13,7 +13,6 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-
 class AuthTokenFilter: OncePerRequestFilter() {
 
     @Autowired
@@ -25,7 +24,7 @@ class AuthTokenFilter: OncePerRequestFilter() {
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         try {
             val jwt = parseJwt(request)
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
+            if (jwtUtils.validateJwtToken(jwt)) {
                 val username: String = jwtUtils.getUserNameFromJwtToken(jwt)
                 val userDetails: UserDetails = mongoUserDetailService.loadUserByUsername(username)
                 val authentication = UsernamePasswordAuthenticationToken(userDetails, null,
@@ -40,11 +39,16 @@ class AuthTokenFilter: OncePerRequestFilter() {
         filterChain.doFilter(request, response)
     }
 
-
-    private fun parseJwt(request: HttpServletRequest): String? {
+    private fun parseJwt(request: HttpServletRequest): String {
         val headerAuth = request.getHeader("Authorization")
-        return if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            headerAuth.substring(7, headerAuth.length)
-        } else null
+        if (StringUtils.hasText(headerAuth)) {
+            if (headerAuth.startsWith("Bearer ")) {
+                return headerAuth.substring(7)
+            } else {
+                throw RuntimeException("Unable to parse JWT, Authorization header must start with \"Bearer \"")
+            }
+        } else {
+            throw RuntimeException("Unable to parse JWT, header \"Authorization\" must not be empty")
+        }
     }
 }
