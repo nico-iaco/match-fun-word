@@ -36,7 +36,7 @@ class JwtUtils {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body.subject
     }
 
-    fun validateJwtToken(authToken: String?): Boolean {
+    fun validateJwtToken(authToken: String): Boolean {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
             return true
